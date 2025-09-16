@@ -1,0 +1,40 @@
+[package]
+name = "rustflix-database"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Database layer and persistence for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+
+# Async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# Database
+sqlx = { workspace = true, features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json", "macros", "ipnetwork"], default-features = false }
+redis = { workspace = true }
+ipnetwork = "0.20"
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+testcontainers = "0.15"

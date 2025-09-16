@@ -12,11 +12,13 @@ pub mod config;
 pub mod events;
 
 // Re-export commonly used types
-pub use error::{Result, RustFlixError};
-pub use media::{MediaItem, MediaType, MediaFormat};
-pub use metadata::{MediaMetadata, ExternalId};
-pub use user::{User, UserId, UserRole};
-pub use streaming::{StreamInfo, Quality, StreamingProtocol};
+pub use error::{RustFlixError, Result};
+pub use media::{MediaItem, MediaType, MediaFormat, MediaId};
+pub use metadata::MediaMetadata;
+pub use user::{User, UserRole, UserId};
+pub use streaming::{StreamInfo, StreamingProtocol, StreamId};
+pub use config::RustFlixConfig;
+pub use events::{Event, EventType};
 
 /// Common result type used throughout RustFlix
 pub type RustFlixResult<T> = std::result::Result<T, RustFlixError>;

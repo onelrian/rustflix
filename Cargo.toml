@@ -17,10 +17,9 @@ resolver = "2"
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-authors = ["RustFlix Team"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/rustflix/rustflix"
-homepage = "https://rustflix.dev"
+authors = ["RustFlix Contributors"]
+license = "MIT"
+repository = "https://github.com/onelrian/rustflix"
 description = "High-performance media server written in Rust"
 keywords = ["media", "streaming", "server", "jellyfin", "rust"]
 categories = ["multimedia", "web-programming::http-server"]
@@ -79,8 +78,8 @@ tempfile = "3.8"
 # Image processing
 image = "0.24"
 
-# Media processing (FFmpeg bindings)
-ffmpeg-next = "6.1"
+# Media processing (FFmpeg bindings) - commented out due to system dependencies
+# ffmpeg-next = "6.1"
 
 # Metrics and monitoring
 prometheus = "0.13"

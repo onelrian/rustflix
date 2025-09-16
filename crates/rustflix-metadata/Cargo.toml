@@ -1,0 +1,44 @@
+[package]
+name = "rustflix-metadata"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Metadata provider integration for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+rustflix-database = { path = "../rustflix-database" }
+
+# Async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+async-trait = "0.1"
+
+# HTTP client
+reqwest = { version = "0.11", features = ["json", "rustls-tls"], default-features = false }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+url = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+# Image processing
+image = { workspace = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+wiremock = { workspace = true }

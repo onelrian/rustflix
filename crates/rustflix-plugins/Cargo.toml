@@ -1,0 +1,38 @@
+[package]
+name = "rustflix-plugins"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "WebAssembly plugin system for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+
+# Async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+# WebAssembly runtime
+wasmtime = { workspace = true }
+wasi-common = { workspace = true }
+
+[dev-dependencies]
+tokio-test = "0.4"

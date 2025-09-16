@@ -1,0 +1,39 @@
+[package]
+name = "rustflix-streaming"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Streaming and transcoding engine for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+rustflix-database = { path = "../rustflix-database" }
+
+# Async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+bytes = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+# Media processing
+# ffmpeg-next = { workspace = true }  # Commented out due to system dependencies
+
+[dev-dependencies]
+tokio-test = "0.4"

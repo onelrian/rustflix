@@ -42,10 +42,14 @@ pub enum MediaType {
     Movie,
     /// TV show episode
     Episode,
+    /// TV show (series)
+    TvShow,
     /// Music track
     Music,
     /// Photo/image
     Photo,
+    /// Person (cast/crew)
+    Person,
     /// Other/unknown media type
     Other,
 }

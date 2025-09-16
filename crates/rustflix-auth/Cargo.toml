@@ -1,0 +1,47 @@
+[package]
+name = "rustflix-auth"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Authentication and authorization for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+rustflix-database = { path = "../rustflix-database" }
+
+# Async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+# Crypto and security
+argon2 = { workspace = true }
+jsonwebtoken = { workspace = true }
+rand = { workspace = true }
+
+# Web framework (optional for middleware)
+axum = { workspace = true, optional = true }
+
+[features]
+default = []
+axum = ["dep:axum"]
+
+[dev-dependencies]
+tokio-test = "0.4"

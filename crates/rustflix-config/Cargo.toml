@@ -1,0 +1,34 @@
+[package]
+name = "rustflix-config"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Configuration management for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+tokio = { workspace = true }
+tracing = { workspace = true }
+serde = { workspace = true }
+toml = "0.8"
+notify = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Configuration
+config = { workspace = true }
+clap = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = { workspace = true }

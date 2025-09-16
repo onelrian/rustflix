@@ -18,6 +18,22 @@ pub struct RustFlixConfig {
     pub plugins: PluginConfig,
 }
 
+impl Default for RustFlixConfig {
+    fn default() -> Self {
+        Self {
+            server: ServerConfig::default(),
+            database: DatabaseConfig::default(),
+            redis: RedisConfig::default(),
+            media: MediaConfig::default(),
+            streaming: StreamingConfig::default(),
+            metadata: MetadataConfig::default(),
+            auth: AuthConfig::default(),
+            logging: LoggingConfig::default(),
+            plugins: PluginConfig::default(),
+        }
+    }
+}
+
 /// Server configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerConfig {
@@ -30,12 +46,36 @@ pub struct ServerConfig {
     pub tls: Option<TlsConfig>,
 }
 
+impl Default for ServerConfig {
+    fn default() -> Self {
+        Self {
+            host: "127.0.0.1".to_string(),
+            port: 8080,
+            workers: None,
+            max_connections: None,
+            request_timeout: Some(30),
+            cors_origins: vec!["*".to_string()],
+            tls: None,
+        }
+    }
+}
+
 /// TLS configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TlsConfig {
     pub cert_path: PathBuf,
     pub key_path: PathBuf,
     pub ca_path: Option<PathBuf>,
+}
+
+impl Default for TlsConfig {
+    fn default() -> Self {
+        Self {
+            cert_path: PathBuf::from("cert.pem"),
+            key_path: PathBuf::from("key.pem"),
+            ca_path: None,
+        }
+    }
 }
 
 /// Database configuration
@@ -50,6 +90,20 @@ pub struct DatabaseConfig {
     pub migration_path: Option<PathBuf>,
 }
 
+impl Default for DatabaseConfig {
+    fn default() -> Self {
+        Self {
+            url: "postgresql://localhost/rustflix".to_string(),
+            max_connections: Some(10),
+            min_connections: Some(1),
+            connection_timeout: Some(30),
+            idle_timeout: Some(600),
+            max_lifetime: Some(1800),
+            migration_path: Some(PathBuf::from("migrations")),
+        }
+    }
+}
+
 /// Redis configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RedisConfig {
@@ -58,6 +112,18 @@ pub struct RedisConfig {
     pub connection_timeout: Option<u64>, // seconds
     pub key_prefix: Option<String>,
     pub default_ttl: Option<u64>, // seconds
+}
+
+impl Default for RedisConfig {
+    fn default() -> Self {
+        Self {
+            url: "redis://localhost:6379".to_string(),
+            max_connections: Some(10),
+            connection_timeout: Some(5),
+            key_prefix: Some("rustflix:".to_string()),
+            default_ttl: Some(3600),
+        }
+    }
 }
 
 /// Media library configuration
@@ -187,73 +253,18 @@ pub struct PluginConfig {
     pub auto_update: bool,
 }
 
-impl Default for RustFlixConfig {
-    fn default() -> Self {
-        Self {
-            server: ServerConfig::default(),
-            database: DatabaseConfig::default(),
-            redis: RedisConfig::default(),
-            media: MediaConfig::default(),
-            streaming: StreamingConfig::default(),
-            metadata: MetadataConfig::default(),
-            auth: AuthConfig::default(),
-            logging: LoggingConfig::default(),
-            plugins: PluginConfig::default(),
-        }
-    }
-}
-
-impl Default for ServerConfig {
-    fn default() -> Self {
-        Self {
-            host: "0.0.0.0".to_string(),
-            port: 8096,
-            workers: None,
-            max_connections: Some(1000),
-            request_timeout: Some(30),
-            cors_origins: vec!["*".to_string()],
-            tls: None,
-        }
-    }
-}
-
-impl Default for DatabaseConfig {
-    fn default() -> Self {
-        Self {
-            url: "postgresql://rustflix:password@localhost/rustflix".to_string(),
-            max_connections: Some(10),
-            min_connections: Some(1),
-            connection_timeout: Some(30),
-            idle_timeout: Some(600),
-            max_lifetime: Some(3600),
-            migration_path: Some(PathBuf::from("migrations")),
-        }
-    }
-}
-
-impl Default for RedisConfig {
-    fn default() -> Self {
-        Self {
-            url: "redis://localhost:6379".to_string(),
-            max_connections: Some(10),
-            connection_timeout: Some(5),
-            key_prefix: Some("rustflix:".to_string()),
-            default_ttl: Some(3600),
-        }
-    }
-}
-
+/// Media library configuration
 impl Default for MediaConfig {
     fn default() -> Self {
         Self {
             library_paths: vec![PathBuf::from("/media")],
-            scan_interval: Some(3600), // 1 hour
+            scan_interval: Some(3600),
             supported_extensions: vec![
                 "mp4".to_string(), "mkv".to_string(), "avi".to_string(),
                 "mov".to_string(), "wmv".to_string(), "flv".to_string(),
                 "webm".to_string(), "m4v".to_string(),
             ],
-            thumbnail_path: PathBuf::from("data/thumbnails"),
+            thumbnail_path: PathBuf::from("thumbnails"),
             thumbnail_sizes: vec![(320, 180), (640, 360), (1280, 720)],
             extract_chapters: true,
             generate_previews: true,
@@ -270,25 +281,25 @@ impl Default for StreamingConfig {
             hardware_acceleration: HardwareAcceleration::default(),
             quality_profiles: vec![
                 QualityProfile {
-                    name: "4K".to_string(),
-                    max_bitrate: 25_000_000,
-                    max_width: Some(3840),
-                    max_height: Some(2160),
-                    video_codec: "h264".to_string(),
-                    audio_codec: "aac".to_string(),
-                    container: "mp4".to_string(),
-                },
-                QualityProfile {
                     name: "1080p".to_string(),
-                    max_bitrate: 8_000_000,
+                    max_bitrate: 8000000,
                     max_width: Some(1920),
                     max_height: Some(1080),
                     video_codec: "h264".to_string(),
                     audio_codec: "aac".to_string(),
                     container: "mp4".to_string(),
                 },
+                QualityProfile {
+                    name: "720p".to_string(),
+                    max_bitrate: 4000000,
+                    max_width: Some(1280),
+                    max_height: Some(720),
+                    video_codec: "h264".to_string(),
+                    audio_codec: "aac".to_string(),
+                    container: "mp4".to_string(),
+                },
             ],
-            max_concurrent_streams: Some(100),
+            max_concurrent_streams: Some(10),
         }
     }
 }
@@ -296,7 +307,7 @@ impl Default for StreamingConfig {
 impl Default for HardwareAcceleration {
     fn default() -> Self {
         Self {
-            enabled: true,
+            enabled: false,
             preferred_encoder: None,
             fallback_to_software: true,
         }
@@ -316,9 +327,9 @@ impl Default for MetadataConfig {
                     priority: 100,
                 },
             ],
-            cache_duration: 86400, // 24 hours
-            image_cache_path: PathBuf::from("data/images"),
-            max_image_size: 10_485_760, // 10MB
+            cache_duration: 86400,
+            image_cache_path: PathBuf::from("images"),
+            max_image_size: 10485760, // 10MB
             preferred_language: "en".to_string(),
         }
     }
@@ -328,13 +339,13 @@ impl Default for AuthConfig {
     fn default() -> Self {
         Self {
             jwt_secret: "change-me-in-production".to_string(),
-            jwt_expiry: 3600,      // 1 hour
-            refresh_token_expiry: 2_592_000, // 30 days
+            jwt_expiry: 3600,
+            refresh_token_expiry: 604800,
             password_min_length: 8,
             require_email_verification: false,
             max_login_attempts: 5,
-            lockout_duration: 900, // 15 minutes
-            oauth_providers: Vec::new(),
+            lockout_duration: 900,
+            oauth_providers: vec![],
         }
     }
 }
@@ -346,7 +357,7 @@ impl Default for LoggingConfig {
             format: LogFormat::Pretty,
             output: LogOutput::Stdout,
             file_path: None,
-            max_file_size: Some(100_000_000), // 100MB
+            max_file_size: Some(104857600), // 100MB
             max_files: Some(10),
         }
     }
@@ -355,11 +366,11 @@ impl Default for LoggingConfig {
 impl Default for PluginConfig {
     fn default() -> Self {
         Self {
-            enabled: true,
+            enabled: false,
             plugin_path: PathBuf::from("plugins"),
-            max_memory: Some(100_000_000), // 100MB
-            max_cpu_time: Some(5000),      // 5 seconds
-            allowed_hosts: Vec::new(),
+            max_memory: Some(134217728), // 128MB
+            max_cpu_time: Some(5000),    // 5 seconds
+            allowed_hosts: vec!["localhost".to_string()],
             auto_update: false,
         }
     }

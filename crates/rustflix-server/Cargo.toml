@@ -1,0 +1,55 @@
+[package]
+name = "rustflix-server"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Main server binary for RustFlix"
+
+[[bin]]
+name = "rustflix-server"
+path = "src/main.rs"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+rustflix-database = { path = "../rustflix-database" }
+rustflix-media-library = { path = "../rustflix-media-library" }
+rustflix-metadata = { path = "../rustflix-metadata" }
+rustflix-streaming = { path = "../rustflix-streaming" }
+rustflix-auth = { path = "../rustflix-auth" }
+rustflix-api = { path = "../rustflix-api" }
+rustflix-plugins = { path = "../rustflix-plugins" }
+rustflix-config = { path = "../rustflix-config" }
+rustflix-monitoring = { path = "../rustflix-monitoring" }
+
+# Async runtime
+tokio = { workspace = true, features = ["net"] }
+futures = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Configuration
+config = { workspace = true }
+clap = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+# Web framework
+axum = { workspace = true }
+
+[dev-dependencies]
+tokio-test = "0.4"

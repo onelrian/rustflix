@@ -25,6 +25,7 @@ Thumbs.db
 logs/
 
 # Runtime data
+{{ ... }}
 pids
 *.pid
 *.seed
@@ -55,10 +56,19 @@ test_media/
 *.webm
 *.m4v
 
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
 # Temporary files
 tmp/
 temp/
-*.tmp
+{{ ... }}
 *.temp
 
 # Build artifacts
@@ -77,3 +87,8 @@ docker-compose.override.yml
 config/local.toml
 config/production.toml
 config/development.toml
+
+# Internal documentation (not for public)
+memory.md
+progress.md
+venv/

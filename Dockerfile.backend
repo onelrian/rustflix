@@ -1,0 +1,46 @@
+# Build stage
+FROM rust:1.75-slim as builder
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy Cargo files
+COPY Cargo.toml Cargo.lock ./
+COPY crates/ ./crates/
+
+# Build the application
+RUN cargo build --release --bin rustflix-server
+
+# Runtime stage
+FROM debian:bookworm-slim
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    libpq5 \
+    libssl3 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy the binary
+COPY --from=builder /app/target/release/rustflix-server /app/rustflix-server
+
+# Create directories
+RUN mkdir -p /app/config /app/media /app/data /app/thumbnails /app/images
+
+# Create non-root user
+RUN useradd -r -s /bin/false rustflix && \
+    chown -R rustflix:rustflix /app
+
+USER rustflix
+
+EXPOSE 8080
+
+CMD ["./rustflix-server"]

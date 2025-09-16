@@ -181,6 +181,35 @@ pub struct MetadataProvider {
     pub priority: u8, // 0-255, higher = more priority
 }
 
+impl Default for MediaMetadata {
+    fn default() -> Self {
+        let now = Utc::now();
+        Self {
+            id: Uuid::new_v4(),
+            title: String::new(),
+            original_title: None,
+            description: None,
+            tagline: None,
+            release_date: None,
+            runtime: None,
+            genres: Vec::new(),
+            languages: Vec::new(),
+            countries: Vec::new(),
+            rating: None,
+            vote_count: None,
+            popularity: None,
+            budget: None,
+            revenue: None,
+            cast: Vec::new(),
+            crew: Vec::new(),
+            external_ids: HashMap::new(),
+            images: MediaImages::default(),
+            created_at: now,
+            updated_at: now,
+        }
+    }
+}
+
 impl MediaMetadata {
     /// Create new metadata entry
     pub fn new(title: String) -> Self {

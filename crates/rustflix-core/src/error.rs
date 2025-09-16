@@ -1,20 +1,26 @@
 //! Error types and handling for RustFlix
 
-use std::fmt;
 use thiserror::Error;
 
-/// Main error type for RustFlix operations
-#[derive(Error, Debug)]
+/// Main error type for RustFlix
+#[derive(Debug, Error)]
 pub enum RustFlixError {
-    /// Database-related errors
+    /// Database errors
+    #[cfg(feature = "sqlx")]
     #[error("Database error: {0}")]
     Database(#[from] sqlx::Error),
 
-    /// I/O errors (file system, network)
+    /// Database migration errors
+    #[cfg(feature = "sqlx")]
+    #[error("Migration error: {0}")]
+    Migration(#[from] sqlx::migrate::MigrateError),
+
+    /// I/O errors
     #[error("I/O error: {0}")]
     Io(#[from] std::io::Error),
 
-    /// HTTP client errors
+    /// HTTP errors
+    #[cfg(feature = "reqwest")]
     #[error("HTTP error: {0}")]
     Http(#[from] reqwest::Error),
 
@@ -159,11 +165,15 @@ impl RustFlixError {
         )
     }
 
-    /// Get the error category for metrics/logging
-    pub fn category(&self) -> &'static str {
+    /// Get error code for categorization
+    pub fn error_code(&self) -> &'static str {
         match self {
+            #[cfg(feature = "sqlx")]
             Self::Database(_) => "database",
+            #[cfg(feature = "sqlx")]
+            Self::Migration(_) => "migration",
             Self::Io(_) => "io",
+            #[cfg(feature = "reqwest")]
             Self::Http(_) => "http",
             Self::Serialization(_) => "serialization",
             Self::Auth { .. } => "auth",
@@ -173,7 +183,7 @@ impl RustFlixError {
             Self::Config { .. } => "config",
             Self::Validation { .. } => "validation",
             Self::NotFound { .. } => "not_found",
-            Self::PermissionDenied { .. } => "permission_denied",
+            Self::PermissionDenied { .. } => "permission",
             Self::RateLimit { .. } => "rate_limit",
             Self::ServiceUnavailable { .. } => "service_unavailable",
             Self::Internal { .. } => "internal",

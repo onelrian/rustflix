@@ -1,0 +1,45 @@
+[package]
+name = "rustflix-media-library"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Media library scanning and management for RustFlix"
+
+[dependencies]
+# Core dependencies
+rustflix-core = { path = "../rustflix-core" }
+rustflix-database = { path = "../rustflix-database" }
+
+# Async runtime
+tokio = { workspace = true }
+futures = { workspace = true }
+
+# File system operations
+walkdir = { workspace = true }
+notify = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Utilities
+uuid = { workspace = true }
+chrono = { workspace = true }
+mime = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+# Media processing
+# ffmpeg-next = { workspace = true }  # Commented out due to system dependencies
+image = { workspace = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = { workspace = true }

@@ -1,0 +1,84 @@
+[server]
+host = "127.0.0.1"
+port = 8080
+cors_origins = ["*"]
+
+[database]
+url = "postgresql://rustflix:rustflix_password@localhost:5433/rustflix"
+max_connections = 10
+min_connections = 1
+
+[redis]
+url = "redis://localhost:6379"
+
+[media]
+library_paths = ["./media"]
+scan_interval = 3600
+supported_extensions = ["mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "m4v"]
+thumbnail_path = "thumbnails"
+thumbnail_sizes = [[320, 180], [640, 360], [1280, 720]]
+extract_chapters = true
+generate_previews = true
+
+[streaming]
+segment_duration = 6.0
+segment_count = 5
+max_concurrent_streams = 10
+
+[streaming.hardware_acceleration]
+enabled = false
+fallback_to_software = true
+
+[[streaming.quality_profiles]]
+name = "1080p"
+max_bitrate = 8000000
+max_width = 1920
+max_height = 1080
+video_codec = "h264"
+audio_codec = "aac"
+container = "mp4"
+
+[[streaming.quality_profiles]]
+name = "720p"
+max_bitrate = 4000000
+max_width = 1280
+max_height = 720
+video_codec = "h264"
+audio_codec = "aac"
+container = "mp4"
+
+[auth]
+jwt_secret = "your-super-secret-jwt-key-change-in-production"
+jwt_expiry = 3600
+refresh_token_expiry = 604800
+password_min_length = 8
+require_email_verification = false
+max_login_attempts = 5
+lockout_duration = 900
+oauth_providers = []
+
+[metadata]
+cache_duration = 86400
+image_cache_path = "images"
+max_image_size = 10485760
+preferred_language = "en"
+
+[[metadata.providers]]
+name = "tmdb"
+enabled = true
+base_url = "https://api.themoviedb.org/3"
+rate_limit = 40
+priority = 100
+
+[logging]
+level = "info"
+format = "Pretty"
+output = "Stdout"
+
+[plugins]
+enabled = false
+plugin_path = "plugins"
+max_memory = 134217728
+max_cpu_time = 5000
+allowed_hosts = ["localhost"]
+auto_update = false
