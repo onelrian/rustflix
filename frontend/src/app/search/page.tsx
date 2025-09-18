@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Layout } from '@/components/layout/Layout'
 import { MediaGrid } from '@/components/media/MediaGrid'
@@ -9,7 +9,7 @@ import { useSearchMedia, useWatchlist } from '@/hooks/useMediaQuery'
 import { SearchFilters as SearchFiltersType } from '@/types'
 import { Search } from 'lucide-react'
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get('q') || ''
   
@@ -75,5 +75,25 @@ export default function SearchPage() {
         )}
       </div>
     </Layout>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <Layout>
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold">Search</h1>
+            <div className="animate-pulse">
+              <div className="h-10 bg-gray-200 rounded-md mb-4"></div>
+              <div className="h-32 bg-gray-200 rounded-md"></div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    }>
+      <SearchPageContent />
+    </Suspense>
   )
 }
