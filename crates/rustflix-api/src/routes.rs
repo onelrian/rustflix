@@ -2,7 +2,7 @@
 
 use rustflix_core::Result;
 use axum::{
-    routing::{get, post, put, delete},
+    routing::{get, post, put, delete, patch},
     Router,
     http::{HeaderValue, Method},
 };
@@ -26,6 +26,7 @@ pub fn create_router() -> Result<Router> {
         .route("/api/v1/media/:id", put(MediaHandler::update_media))
         .route("/api/v1/media/:id", delete(MediaHandler::delete_media))
         .route("/api/v1/media/search", get(MediaHandler::search_media))
+        .route("/api/v1/media/genres", get(MediaHandler::get_genres))
         
         // Library routes
         .route("/api/v1/libraries", get(MediaHandler::list_libraries))
@@ -38,6 +39,11 @@ pub fn create_router() -> Result<Router> {
         .route("/api/v1/users", post(UserHandler::create_user))
         .route("/api/v1/users/:id", put(UserHandler::update_user))
         .route("/api/v1/users/:id", delete(UserHandler::delete_user))
+        .route("/api/v1/users/me/watchlist", get(UserHandler::get_watchlist))
+        .route("/api/v1/users/me/watchlist", post(UserHandler::add_to_watchlist))
+        .route("/api/v1/users/me/watchlist/:media_id", delete(UserHandler::remove_from_watchlist))
+        .route("/api/v1/users/me/history", get(UserHandler::get_watch_history))
+        .route("/api/v1/users/me/preferences", patch(UserHandler::update_preferences))
         
         // Authentication routes
         .route("/api/auth/login", post(AuthHandler::login))

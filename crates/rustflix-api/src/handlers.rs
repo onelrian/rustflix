@@ -14,9 +14,65 @@ pub struct MediaHandler;
 
 impl MediaHandler {
     /// List all media items
-    pub async fn list_media() -> ResponseJson<Vec<MediaItem>> {
-        // Placeholder implementation
-        ResponseJson(vec![])
+    pub async fn list_media(Query(params): Query<SearchParams>) -> ResponseJson<PaginatedResponse<MediaItem>> {
+        // Mock implementation with sample data
+        let sample_media = vec![
+            MediaItem {
+                id: Uuid::new_v4(),
+                title: "The Matrix".to_string(),
+                media_type: "movie".to_string(),
+                description: Some("A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.".to_string()),
+                year: Some(1999),
+                rating: Some(8.7),
+                poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+                backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+                duration: Some(136),
+                genres: vec!["Action".to_string(), "Sci-Fi".to_string()],
+            },
+            MediaItem {
+                id: Uuid::new_v4(),
+                title: "Breaking Bad".to_string(),
+                media_type: "tv_show".to_string(),
+                description: Some("A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine.".to_string()),
+                year: Some(2008),
+                rating: Some(9.5),
+                poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+                backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+                duration: Some(47),
+                genres: vec!["Crime".to_string(), "Drama".to_string(), "Thriller".to_string()],
+            },
+            MediaItem {
+                id: Uuid::new_v4(),
+                title: "Inception".to_string(),
+                media_type: "movie".to_string(),
+                description: Some("A thief who steals corporate secrets through the use of dream-sharing technology.".to_string()),
+                year: Some(2010),
+                rating: Some(8.8),
+                poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+                backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+                duration: Some(148),
+                genres: vec!["Action".to_string(), "Sci-Fi".to_string(), "Thriller".to_string()],
+            },
+        ];
+
+        let limit = params.limit.unwrap_or(20) as usize;
+        let offset = params.offset.unwrap_or(0) as usize;
+        let total = sample_media.len() as u32;
+        
+        let paginated_data = sample_media.into_iter()
+            .skip(offset)
+            .take(limit)
+            .collect();
+
+        ResponseJson(PaginatedResponse {
+            data: paginated_data,
+            pagination: PaginationInfo {
+                page: (offset / limit + 1) as u32,
+                limit: limit as u32,
+                total,
+                total_pages: ((total as f64) / (limit as f64)).ceil() as u32,
+            },
+        })
     }
 
     /// Get specific media item
@@ -41,9 +97,52 @@ impl MediaHandler {
     }
 
     /// Search media items
-    pub async fn search_media(Query(params): Query<SearchParams>) -> ResponseJson<Vec<MediaItem>> {
-        // Placeholder implementation
-        ResponseJson(vec![])
+    pub async fn search_media(Query(params): Query<SearchParams>) -> ResponseJson<PaginatedResponse<MediaItem>> {
+        // Mock implementation with sample data
+        let sample_media = vec![
+            MediaItem {
+                id: Uuid::new_v4(),
+                title: "Sample Movie 1".to_string(),
+                media_type: "movie".to_string(),
+                description: Some("A great sample movie".to_string()),
+                year: Some(2023),
+                rating: Some(8.5),
+                poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+                backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+                duration: Some(120),
+                genres: vec!["Action".to_string(), "Drama".to_string()],
+            },
+            MediaItem {
+                id: Uuid::new_v4(),
+                title: "Sample TV Show 1".to_string(),
+                media_type: "tv_show".to_string(),
+                description: Some("An amazing TV series".to_string()),
+                year: Some(2022),
+                rating: Some(9.0),
+                poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+                backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+                duration: Some(45),
+                genres: vec!["Sci-Fi".to_string(), "Thriller".to_string()],
+            },
+        ];
+
+        let filtered_media = if let Some(query) = &params.q {
+            sample_media.into_iter()
+                .filter(|item| item.title.to_lowercase().contains(&query.to_lowercase()))
+                .collect()
+        } else {
+            sample_media
+        };
+
+        ResponseJson(PaginatedResponse {
+            data: filtered_media,
+            pagination: PaginationInfo {
+                page: 1,
+                limit: params.limit.unwrap_or(20),
+                total: 2,
+                total_pages: 1,
+            },
+        })
     }
 
     /// List libraries
@@ -62,6 +161,32 @@ impl MediaHandler {
     pub async fn scan_library(Path(id): Path<Uuid>) -> StatusCode {
         // Placeholder implementation
         StatusCode::NOT_IMPLEMENTED
+    }
+
+    /// Get available genres
+    pub async fn get_genres() -> ResponseJson<Vec<String>> {
+        // Mock implementation with common genres
+        ResponseJson(vec![
+            "Action".to_string(),
+            "Adventure".to_string(),
+            "Animation".to_string(),
+            "Comedy".to_string(),
+            "Crime".to_string(),
+            "Documentary".to_string(),
+            "Drama".to_string(),
+            "Family".to_string(),
+            "Fantasy".to_string(),
+            "History".to_string(),
+            "Horror".to_string(),
+            "Music".to_string(),
+            "Mystery".to_string(),
+            "Romance".to_string(),
+            "Science Fiction".to_string(),
+            "TV Movie".to_string(),
+            "Thriller".to_string(),
+            "War".to_string(),
+            "Western".to_string(),
+        ])
     }
 }
 
@@ -118,6 +243,79 @@ impl UserHandler {
     pub async fn refresh_token(Json(payload): Json<RefreshTokenRequest>) -> StatusCode {
         // Placeholder implementation
         StatusCode::NOT_IMPLEMENTED
+    }
+
+    /// Get user watchlist
+    pub async fn get_watchlist() -> ResponseJson<PaginatedResponse<MediaItem>> {
+        // Mock implementation with sample watchlist
+        let watchlist_items = vec![
+            MediaItem {
+                id: Uuid::new_v4(),
+                title: "Watchlist Movie 1".to_string(),
+                media_type: "movie".to_string(),
+                description: Some("A movie in your watchlist".to_string()),
+                year: Some(2023),
+                rating: Some(8.0),
+                poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+                backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+                duration: Some(120),
+                genres: vec!["Action".to_string()],
+            },
+        ];
+
+        ResponseJson(PaginatedResponse {
+            data: watchlist_items,
+            pagination: PaginationInfo {
+                page: 1,
+                limit: 20,
+                total: 1,
+                total_pages: 1,
+            },
+        })
+    }
+
+    /// Add to watchlist
+    pub async fn add_to_watchlist(Json(payload): Json<WatchlistRequest>) -> StatusCode {
+        // Placeholder implementation
+        StatusCode::OK
+    }
+
+    /// Remove from watchlist
+    pub async fn remove_from_watchlist(Path(media_id): Path<Uuid>) -> StatusCode {
+        // Placeholder implementation
+        StatusCode::OK
+    }
+
+    /// Get watch history
+    pub async fn get_watch_history() -> ResponseJson<PaginatedResponse<PlaybackState>> {
+        // Mock implementation with sample history
+        let history_items = vec![
+            PlaybackState {
+                id: Uuid::new_v4(),
+                user_id: Uuid::new_v4(),
+                media_id: Uuid::new_v4(),
+                position: 1800, // 30 minutes
+                duration: 7200, // 2 hours
+                completed: false,
+                last_watched: "2023-12-01T10:00:00Z".to_string(),
+            },
+        ];
+
+        ResponseJson(PaginatedResponse {
+            data: history_items,
+            pagination: PaginationInfo {
+                page: 1,
+                limit: 20,
+                total: 1,
+                total_pages: 1,
+            },
+        })
+    }
+
+    /// Update user preferences
+    pub async fn update_preferences(Json(payload): Json<UserPreferences>) -> StatusCode {
+        // Placeholder implementation
+        StatusCode::OK
     }
 }
 
@@ -261,6 +459,27 @@ pub struct MediaItem {
     pub id: Uuid,
     pub title: String,
     pub media_type: String,
+    pub description: Option<String>,
+    pub year: Option<i32>,
+    pub rating: Option<f64>,
+    pub poster_url: Option<String>,
+    pub backdrop_url: Option<String>,
+    pub duration: Option<i32>,
+    pub genres: Vec<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PaginatedResponse<T> {
+    pub data: Vec<T>,
+    pub pagination: PaginationInfo,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PaginationInfo {
+    pub page: u32,
+    pub limit: u32,
+    pub total: u32,
+    pub total_pages: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -376,4 +595,27 @@ pub struct TranscodeStatus {
     pub id: Uuid,
     pub status: String,
     pub progress: f32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PlaybackState {
+    pub id: Uuid,
+    pub user_id: Uuid,
+    pub media_id: Uuid,
+    pub position: i32,
+    pub duration: i32,
+    pub completed: bool,
+    pub last_watched: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct WatchlistRequest {
+    pub media_id: Uuid,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UserPreferences {
+    pub theme: Option<String>,
+    pub language: Option<String>,
+    pub autoplay: Option<bool>,
 }
