@@ -76,9 +76,26 @@ impl MediaHandler {
     }
 
     /// Get specific media item
-    pub async fn get_media(Path(id): Path<Uuid>) -> StatusCode {
-        // Placeholder implementation
-        StatusCode::NOT_FOUND
+    pub async fn get_media(Path(id): Path<Uuid>) -> impl IntoResponse {
+        // Mock implementation - return a sample media item
+        let media_item = MediaItem {
+            id,
+            title: "Sample Media Item".to_string(),
+            media_type: "movie".to_string(),
+            description: Some("This is a sample media item for testing purposes.".to_string()),
+            year: Some(2023),
+            rating: Some(8.5),
+            poster_url: Some("https://via.placeholder.com/300x450".to_string()),
+            backdrop_url: Some("https://via.placeholder.com/1920x1080".to_string()),
+            duration: Some(120),
+            genres: vec!["Action".to_string(), "Drama".to_string()],
+        };
+
+        (StatusCode::OK, ResponseJson(ApiResponse {
+            data: media_item,
+            success: true,
+            message: Some("Media item retrieved successfully".to_string()),
+        }))
     }
 
     /// Update media item
@@ -402,9 +419,19 @@ pub struct StreamHandler;
 
 impl StreamHandler {
     /// Get stream information
-    pub async fn get_stream_info(Path(id): Path<Uuid>) -> StatusCode {
-        // Placeholder implementation
-        StatusCode::NOT_FOUND
+    pub async fn get_stream_info(Path(id): Path<Uuid>) -> impl IntoResponse {
+        // Mock implementation - return stream info
+        let stream_info = StreamInfo {
+            id: Uuid::new_v4(),
+            media_id: id,
+            protocol: "hls".to_string(),
+        };
+
+        (StatusCode::OK, ResponseJson(ApiResponse {
+            data: stream_info,
+            success: true,
+            message: Some("Stream info retrieved successfully".to_string()),
+        }))
     }
 
     /// Start streaming session
@@ -451,6 +478,18 @@ impl StreamHandler {
         // Placeholder implementation
         StatusCode::OK
     }
+
+    /// Get stream URL for media
+    pub async fn get_stream_url(Path((media_id, format)): Path<(Uuid, String)>) -> impl IntoResponse {
+        // Mock implementation - return a stream URL
+        let stream_url = format!("http://localhost:8080/api/v1/stream/{}/{}/playlist.m3u8", media_id, format);
+        
+        (StatusCode::OK, ResponseJson(ApiResponse {
+            data: stream_url,
+            success: true,
+            message: Some("Stream URL generated successfully".to_string()),
+        }))
+    }
 }
 
 // Request/Response types
@@ -472,6 +511,13 @@ pub struct MediaItem {
 pub struct PaginatedResponse<T> {
     pub data: Vec<T>,
     pub pagination: PaginationInfo,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ApiResponse<T> {
+    pub data: T,
+    pub success: bool,
+    pub message: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

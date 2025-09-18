@@ -55,6 +55,7 @@ pub fn create_router() -> Result<Router> {
         .route("/api/v1/stream/:id/info", get(StreamHandler::get_stream_info))
         .route("/api/v1/stream/:id/start", post(StreamHandler::start_stream))
         .route("/api/v1/stream/:id/stop", post(StreamHandler::stop_stream))
+        .route("/api/v1/stream/:media_id/:format", get(StreamHandler::get_stream_url))
         .route("/api/v1/stream/:id/hls/:file", get(StreamHandler::serve_hls))
         .route("/api/v1/stream/:id/dash/:file", get(StreamHandler::serve_dash))
         
