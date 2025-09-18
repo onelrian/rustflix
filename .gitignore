@@ -91,4 +91,20 @@ config/development.toml
 # Internal documentation (not for public)
 memory.md
 progress.md
+VERIFICATION_REPORT.md
+*_REPORT.md
+*_NOTES.md
+
+# Development/test files and directories
+frontend/src/app/test/
+frontend/src/app/working/
+frontend/src/app/simple/
+frontend/src/app/debug/
+simple_auth_server.py
+test_*.py
+debug_*.py
+
+# Python virtual environment
 venv/
+__pycache__/
+*.pyc
