@@ -9,7 +9,7 @@ import { Heart } from 'lucide-react'
 export default function WatchlistPage() {
   const { data: watchlistData, isLoading } = useWatchlist()
 
-  const watchlistIds = watchlistData?.data.map(item => item.id) || []
+  const watchlistIds = watchlistData?.data.map((item: { id: string }) => item.id) || []
 
   return (
     <Layout>

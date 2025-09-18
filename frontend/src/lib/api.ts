@@ -160,6 +160,24 @@ export const userApi = {
   updatePreferences: async (preferences: Record<string, string | boolean | number>): Promise<void> => {
     await api.patch('/api/v1/users/me/preferences', preferences)
   },
+
+  getWatchHistory: async (): Promise<PaginatedResponse<PlaybackState>> => {
+    const response = await api.get<PaginatedResponse<PlaybackState>>('/api/v1/users/me/history')
+    return response.data
+  },
+
+  getWatchlist: async (): Promise<PaginatedResponse<MediaItem>> => {
+    const response = await api.get<PaginatedResponse<MediaItem>>('/api/v1/users/me/watchlist')
+    return response.data
+  },
+
+  addToWatchlist: async (mediaId: string): Promise<void> => {
+    await api.post('/api/v1/users/me/watchlist', { mediaId })
+  },
+
+  removeFromWatchlist: async (mediaId: string): Promise<void> => {
+    await api.delete(`/api/v1/users/me/watchlist/${mediaId}`)
+  },
 }
 
 // Streaming API
@@ -180,6 +198,11 @@ export const streamingApi = {
 
   endSession: async (sessionId: string): Promise<void> => {
     await api.delete(`/api/v1/stream/session/${sessionId}`)
+  },
+
+  getStreamUrl: async (mediaId: string, format: string): Promise<string> => {
+    // Mock implementation - return a placeholder stream URL
+    return `http://localhost:8080/api/v1/stream/${mediaId}/${format}`
   },
 }
 

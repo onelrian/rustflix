@@ -71,7 +71,14 @@ export function useUpdatePlaybackState() {
   
   return useMutation({
     mutationFn: ({ mediaId, position }: { mediaId: string; position: number }) =>
-      streamingApi.updatePlaybackState(mediaId, position),
+      streamingApi.updatePlaybackState(mediaId, {
+        userId: 'current-user', // TODO: Get from auth context
+        mediaId,
+        position,
+        duration: 0,
+        completed: false,
+        lastWatched: new Date().toISOString()
+      }),
     onSuccess: (_, { mediaId }) => {
       queryClient.invalidateQueries({ queryKey: ['playback', mediaId] })
     },

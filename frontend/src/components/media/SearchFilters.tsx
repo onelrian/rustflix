@@ -117,7 +117,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
                 min="1900"
                 max={new Date().getFullYear()}
                 value={filters.year || ''}
-                onChange={(e) => updateFilter('year', e.target.value ? parseInt(e.target.value) : undefined)}
+                onChange={(e) => updateFilter('year', e.target.value ? parseInt(e.target.value) : 0)}
                 className="w-full p-2 border rounded-md bg-background"
                 placeholder="Any year"
               />
@@ -132,7 +132,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
                 max="10"
                 step="0.1"
                 value={filters.rating || ''}
-                onChange={(e) => updateFilter('rating', e.target.value ? parseFloat(e.target.value) : undefined)}
+                onChange={(e) => updateFilter('rating', e.target.value ? parseFloat(e.target.value) : 0)}
                 className="w-full p-2 border rounded-md bg-background"
                 placeholder="Any rating"
               />
