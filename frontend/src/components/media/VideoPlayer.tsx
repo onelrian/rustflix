@@ -24,7 +24,16 @@ export function VideoPlayer({
   onEnded
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLDivElement>(null)
-  const playerRef = useRef<any>(null)
+  const playerRef = useRef<{
+    currentTime: () => number | undefined
+    duration: () => number | undefined
+    paused: () => boolean
+    dispose: () => void
+    ready: (callback: () => void) => void
+    on: (event: string, callback: (...args: unknown[]) => void) => void
+    isDisposed: () => boolean
+    src: (source?: string | { src: string; type: string }) => string | void
+  } | null>(null)
   const updatePlaybackState = useUpdatePlaybackState()
   const [lastUpdateTime, setLastUpdateTime] = useState(0)
 
@@ -91,7 +100,7 @@ export function VideoPlayer({
     })
 
     // Handle errors
-    player.on('error', (error: any) => {
+    player.on('error', (error: unknown) => {
       console.error('Video player error:', error)
     })
 

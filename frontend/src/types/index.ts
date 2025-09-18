@@ -109,6 +109,8 @@ export interface SearchFilters {
   rating?: number
   sortBy?: 'title' | 'releaseDate' | 'rating' | 'duration'
   sortOrder?: 'asc' | 'desc'
+  page?: number
+  limit?: number
 }
 
 export interface ApiResponse<T> {

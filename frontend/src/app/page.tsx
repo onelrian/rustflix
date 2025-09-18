@@ -34,7 +34,7 @@ export default function Home() {
   }
 
   const recentMedia = mediaData?.data.slice(0, 12) || []
-  const watchlistIds = watchlistData?.data.map(item => item.id) || []
+  const watchlistIds = watchlistData?.data.map((item: { id: string }) => item.id) || []
 
   return (
     <Layout>

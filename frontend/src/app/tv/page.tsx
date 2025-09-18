@@ -20,7 +20,7 @@ export default function TVShowsPage() {
   const { data: tvData, isLoading } = useMedia({ ...filters, page, limit: 24 })
   const { data: watchlistData } = useWatchlist()
 
-  const watchlistIds = watchlistData?.data.map(item => item.id) || []
+  const watchlistIds = watchlistData?.data.map((item: { id: string }) => item.id) || []
 
   const handleFiltersChange = (newFilters: SearchFiltersType) => {
     setFilters(newFilters)

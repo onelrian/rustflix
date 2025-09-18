@@ -15,7 +15,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
   const [isOpen, setIsOpen] = useState(false)
   const { data: genres = [] } = useGenres()
 
-  const updateFilter = (key: keyof SearchFiltersType, value: any) => {
+  const updateFilter = (key: keyof SearchFiltersType, value: string | string[] | number) => {
     onFiltersChange({ ...filters, [key]: value })
   }
 
@@ -74,7 +74,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
               <label className="text-sm font-medium mb-2 block">Media Type</label>
               <select
                 value={filters.mediaType || 'all'}
-                onChange={(e) => updateFilter('mediaType', e.target.value as any)}
+                onChange={(e) => updateFilter('mediaType', e.target.value)}
                 className="w-full p-2 border rounded-md bg-background"
               >
                 <option value="all">All</option>
@@ -144,7 +144,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
                 <label className="text-sm font-medium mb-2 block">Sort By</label>
                 <select
                   value={filters.sortBy || 'title'}
-                  onChange={(e) => updateFilter('sortBy', e.target.value as any)}
+                  onChange={(e) => updateFilter('sortBy', e.target.value)}
                   className="w-full p-2 border rounded-md bg-background"
                 >
                   <option value="title">Title</option>
@@ -157,7 +157,7 @@ export function SearchFilters({ filters, onFiltersChange }: SearchFiltersProps) 
                 <label className="text-sm font-medium mb-2 block">Order</label>
                 <select
                   value={filters.sortOrder || 'asc'}
-                  onChange={(e) => updateFilter('sortOrder', e.target.value as any)}
+                  onChange={(e) => updateFilter('sortOrder', e.target.value)}
                   className="w-full p-2 border rounded-md bg-background"
                 >
                   <option value="asc">Ascending</option>
