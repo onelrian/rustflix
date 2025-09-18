@@ -25,13 +25,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem('authToken')
-      if (token) {
-        const currentUser = await authApi.getCurrentUser()
-        setUser(currentUser)
+      // Only access localStorage on client side
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('authToken')
+        if (token) {
+          const currentUser = await authApi.getCurrentUser()
+          setUser(currentUser)
+        }
       }
     } catch (error) {
-      localStorage.removeItem('authToken')
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('authToken')
+      }
     } finally {
       setLoading(false)
     }
@@ -40,7 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (credentials: LoginRequest) => {
     const response = await authApi.login(credentials)
     if (response.token && response.user.username) {
-      localStorage.setItem('authToken', response.token)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('authToken', response.token)
+      }
       setUser(response.user)
     } else {
       throw new Error('Invalid credentials')
@@ -50,7 +57,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (userData: RegisterRequest) => {
     const response = await authApi.register(userData)
     if (response.token && response.user.username) {
-      localStorage.setItem('authToken', response.token)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('authToken', response.token)
+      }
       setUser(response.user)
     } else {
       throw new Error('Registration failed')
@@ -58,12 +67,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = async () => {
-    try {
-      await authApi.logout()
-    } catch (error) {
-      // Continue with logout even if API call fails
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('authToken')
     }
-    localStorage.removeItem('authToken')
     setUser(null)
   }
 
