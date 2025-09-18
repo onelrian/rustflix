@@ -16,13 +16,13 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
-  const handlePreferenceUpdate = async (key: string, value: any) => {
+  const handlePreferenceUpdate = async (key: string, value: string | boolean | number) => {
     try {
       setLoading(true)
       await userApi.updatePreferences({ [key]: value })
       setMessage('Preferences updated successfully')
       setTimeout(() => setMessage(''), 3000)
-    } catch (error) {
+    } catch {
       setMessage('Failed to update preferences')
       setTimeout(() => setMessage(''), 3000)
     } finally {

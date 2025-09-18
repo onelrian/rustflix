@@ -102,8 +102,18 @@ export const mediaApi = {
     return response.data.data
   },
 
-  getLibraries: async (): Promise<any[]> => {
-    const response = await api.get<ApiResponse<any[]>>('/api/v1/libraries')
+  getLibraries: async (): Promise<Array<{
+    id: string
+    name: string
+    path: string
+    type: string
+  }>> => {
+    const response = await api.get<ApiResponse<Array<{
+      id: string
+      name: string
+      path: string
+      type: string
+    }>>>('/api/v1/libraries')
     return response.data.data || []
   },
 
@@ -124,18 +134,31 @@ export const userApi = {
     return response.data.data
   },
 
-  createUser: async (userData: any): Promise<User> => {
+  createUser: async (userData: {
+    username: string
+    email: string
+    password: string
+    role?: string
+  }): Promise<User> => {
     const response = await api.post<ApiResponse<User>>('/api/v1/users', userData)
     return response.data.data
   },
 
-  updateUser: async (id: string, userData: any): Promise<User> => {
+  updateUser: async (id: string, userData: Partial<{
+    username: string
+    email: string
+    role: string
+  }>): Promise<User> => {
     const response = await api.put<ApiResponse<User>>(`/api/v1/users/${id}`, userData)
     return response.data.data
   },
 
   deleteUser: async (id: string): Promise<void> => {
     await api.delete(`/api/v1/users/${id}`)
+  },
+
+  updatePreferences: async (preferences: Record<string, string | boolean | number>): Promise<void> => {
+    await api.patch('/api/v1/users/me/preferences', preferences)
   },
 }
 
@@ -166,7 +189,12 @@ export const adminApi = {
     await api.post('/api/v1/libraries/scan')
   },
 
-  getSystemStats: async (): Promise<any> => {
+  getSystemStats: async (): Promise<{
+    totalMedia: number
+    totalUsers: number
+    storageUsed: string
+    activeStreams: number
+  }> => {
     // Mock data for now since backend doesn't have this endpoint yet
     return {
       totalMedia: 0,
@@ -186,7 +214,11 @@ export const adminApi = {
     await new Promise(resolve => setTimeout(resolve, 1000))
   },
 
-  getServerSettings: async (): Promise<any> => {
+  getServerSettings: async (): Promise<{
+    serverName: string
+    version: string
+    maxStreams: number
+  }> => {
     // Mock implementation
     return {
       serverName: 'RustFlix Server',
@@ -195,7 +227,10 @@ export const adminApi = {
     }
   },
 
-  updateServerSettings: async (settings: any): Promise<void> => {
+  updateServerSettings: async (_settings: {
+    serverName?: string
+    maxStreams?: number
+  }): Promise<void> => {
     // Mock implementation
     await new Promise(resolve => setTimeout(resolve, 1000))
   },
