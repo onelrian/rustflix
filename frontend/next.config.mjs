@@ -2,12 +2,9 @@
 const nextConfig = {
   output: 'standalone',
   images: {
-    domains: ['localhost', 'image.tmdb.org', 'images.unsplash.com'],
-    unoptimized: true
+    domains: ['localhost', '127.0.0.1'],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['video.js']
-  }
+  serverExternalPackages: ['video.js'],
 }
 
 export default nextConfig

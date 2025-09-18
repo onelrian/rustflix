@@ -24,7 +24,7 @@ export default function MoviePage() {
   const addToWatchlist = useAddToWatchlist()
   const removeFromWatchlist = useRemoveFromWatchlist()
 
-  const isInWatchlist = watchlistData?.data.some(item => item.id === movieId) || false
+  const isInWatchlist = watchlistData?.data.some((item: { id: string }) => item.id === movieId) || false
 
   const handleWatchlistToggle = () => {
     if (isInWatchlist) {

@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation'
 import { Layout } from '@/components/layout/Layout'
 import { MediaGrid } from '@/components/media/MediaGrid'
 import { SearchFilters } from '@/components/media/SearchFilters'
-import { Input } from '@/components/ui/Input'
 import { useSearchMedia, useWatchlist } from '@/hooks/useMediaQuery'
 import { SearchFilters as SearchFiltersType } from '@/types'
 import { Search } from 'lucide-react'
@@ -24,7 +23,7 @@ export default function SearchPage() {
   const { data: searchResults, isLoading } = useSearchMedia(query, filters)
   const { data: watchlistData } = useWatchlist()
 
-  const watchlistIds = watchlistData?.data.map(item => item.id) || []
+  const watchlistIds = watchlistData?.data.map((item: { id: string }) => item.id) || []
 
   useEffect(() => {
     setQuery(initialQuery)
@@ -54,7 +53,7 @@ export default function SearchPage() {
         {query && (
           <div>
             <p className="text-muted-foreground mb-4">
-              {searchResults?.pagination.total || 0} results for "{query}"
+              {searchResults?.pagination.total || 0} results for &quot;{query}&quot;
             </p>
             
             <MediaGrid

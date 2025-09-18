@@ -47,13 +47,14 @@ export default function RegisterPage() {
         password: data.password,
       })
       router.push('/')
-    } catch (err: any) {
-      if (err.response?.status === 400) {
+    } catch (err: unknown) {
+      const error = err as { response?: { status?: number; data?: { message?: string } } }
+      if (error.response?.status === 400) {
         setError('Please check your input. Username, email, and password (min 6 chars) are required.')
-      } else if (err.response?.status === 409) {
+      } else if (error.response?.status === 409) {
         setError('Username or email already exists')
       } else {
-        setError(err.response?.data?.message || 'Registration failed. Please try again.')
+        setError(error.response?.data?.message || 'Registration failed. Please try again.')
       }
     } finally {
       setLoading(false)

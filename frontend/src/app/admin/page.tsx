@@ -12,19 +12,12 @@ export default function AdminPage() {
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [stats, setStats] = useState<any>(null)
-
-  if (!user || user.role !== 'admin') {
-    return (
-      <Layout>
-        <div className="text-center py-12">
-          <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-          <p className="text-muted-foreground">You don't have permission to access this page.</p>
-        </div>
-      </Layout>
-    )
-  }
+  const [stats, setStats] = useState<{
+    totalMedia: number
+    totalUsers: number
+    storageUsed: string
+    activeStreams: number
+  } | null>(null)
 
   const handleScanLibrary = async () => {
     try {
@@ -32,7 +25,7 @@ export default function AdminPage() {
       setMessage('Starting library scan...')
       await adminApi.scanLibrary()
       setMessage('Library scan started successfully')
-    } catch (error) {
+    } catch {
       setMessage('Failed to start library scan')
     } finally {
       setLoading(false)
@@ -44,14 +37,28 @@ export default function AdminPage() {
     try {
       const data = await adminApi.getSystemStats()
       setStats(data)
-    } catch (error) {
-      console.error('Failed to load stats:', error)
+    } catch {
+      console.error('Failed to load stats')
     }
   }
 
   React.useEffect(() => {
-    loadStats()
-  }, [])
+    if (user && user.role === 'admin') {
+      loadStats()
+    }
+  }, [user])
+
+  if (!user || user.role !== 'admin') {
+    return (
+      <Layout>
+        <div className="text-center py-12">
+          <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
+          <p className="text-muted-foreground">You don&apos;t have permission to access this page.</p>
+        </div>
+      </Layout>
+    )
+  }
 
   return (
     <Layout>

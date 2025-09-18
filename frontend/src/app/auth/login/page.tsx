@@ -38,13 +38,14 @@ export default function LoginPage() {
       setError('')
       await login(data)
       router.push('/')
-    } catch (err: any) {
-      if (err.response?.status === 401) {
+    } catch (err: unknown) {
+      const error = err as { response?: { status?: number; data?: { message?: string } } }
+      if (error.response?.status === 401) {
         setError('Invalid username or password')
-      } else if (err.response?.status === 400) {
+      } else if (error.response?.status === 400) {
         setError('Please check your input and try again')
       } else {
-        setError(err.response?.data?.message || 'Login failed. Please try again.')
+        setError(error.response?.data?.message || 'Login failed. Please try again.')
       }
     } finally {
       setLoading(false)
